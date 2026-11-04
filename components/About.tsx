@@ -1,12 +1,16 @@
-import { about } from "@/data/content";
+"use client";
+
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function About() {
+  const { t } = useLanguage();
+  const { about } = t;
   return (
     <section id="sobre" aria-labelledby="sobre-titulo" className="bg-surface">
       <div className="shell grid gap-10 py-20 md:py-28 lg:grid-cols-12 lg:gap-6">
         <div className="lg:col-span-8">
           <h2 id="sobre-titulo" className="text-[15px] font-semibold">
-            Sobre
+            {t.ui.aboutTitle}
           </h2>
           <p className="mt-6 text-[30px] font-medium leading-[1.15] tracking-[-0.03em] md:text-[50px] md:leading-[1.12]">
             {about.statement}

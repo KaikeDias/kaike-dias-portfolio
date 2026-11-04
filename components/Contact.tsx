@@ -1,10 +1,14 @@
+"use client";
+
 import { ArrowUpRight, Download } from "lucide-react";
-import { contact, site } from "@/data/content";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const rowClass =
   "group flex min-h-16 flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-night-line py-4 transition-colors duration-200 hover:text-surface";
 
 export default function Contact() {
+  const { t } = useLanguage();
+  const { contact } = t;
   return (
     <section id="contato" aria-labelledby="contato-titulo" className="on-dark bg-ink text-canvas">
       <div className="shell pb-16 pt-20 md:pb-20 md:pt-32">
@@ -29,15 +33,15 @@ export default function Contact() {
                   <span className="inline-flex items-center gap-1.5 text-[15px] text-night-muted transition-colors duration-200 group-hover:text-canvas">
                     {link.value}
                     {external && <ArrowUpRight aria-hidden size={16} strokeWidth={1.75} />}
-                    {external && <span className="sr-only">, abre em nova aba</span>}
+                    {external && <span className="sr-only">{t.ui.opensNewTab}</span>}
                   </span>
                 </a>
               </li>
             );
           })}
           <li>
-            <a href={site.resumeUrl} download className={rowClass}>
-              <span className="text-xl font-medium md:text-2xl">Baixar currículo</span>
+            <a href={t.site.resumeUrl} download className={rowClass}>
+              <span className="text-xl font-medium md:text-2xl">{t.ui.downloadResume}</span>
               <Download aria-hidden size={18} strokeWidth={1.75} />
             </a>
           </li>

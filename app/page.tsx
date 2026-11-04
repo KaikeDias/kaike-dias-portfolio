@@ -6,10 +6,11 @@ import About from "@/components/About";
 import Technologies from "@/components/Technologies";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 export default function Home() {
   return (
-    <>
+    <LanguageProvider>
       <Header />
       <main id="conteudo" tabIndex={-1} className="focus:outline-none">
         <Hero />
@@ -20,6 +21,6 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
-    </>
+    </LanguageProvider>
   );
 }
