@@ -1,11 +1,15 @@
-import { experiences } from "@/data/content";
+"use client";
+
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Experience() {
+  const { t } = useLanguage();
+  const { experiences } = t;
   return (
     <section id="experiencia" aria-labelledby="experiencia-titulo" className="border-t border-line">
       <div className="shell py-20 md:py-28">
         <h2 id="experiencia-titulo" className="text-[40px] font-medium leading-none tracking-[-0.04em] md:text-[72px]">
-          Experiência
+          {t.ui.experienceTitle}
         </h2>
 
         <ol className="mt-12 md:mt-20">
@@ -31,12 +35,12 @@ export default function Experience() {
                 </h3>
                 <p className="mt-1 text-lg text-olive-strong md:text-xl">
                   {exp.company}
-                  {exp.current && ", posição atual"}
+                  {exp.current && t.ui.currentPosition}
                 </p>
 
                 <div className="mt-8 grid gap-8 lg:grid-cols-9 lg:gap-6">
                   <div className="lg:col-span-5">
-                    <h4 className="text-sm text-muted">Responsabilidades</h4>
+                    <h4 className="text-sm text-muted">{t.ui.responsibilities}</h4>
                     <ul className="mt-3 list-disc space-y-2.5 pl-5 text-[15px] leading-relaxed marker:text-ink">
                       {exp.responsibilities.map((item) => (
                         <li key={item}>{item}</li>
@@ -44,7 +48,7 @@ export default function Experience() {
                     </ul>
                   </div>
                   <div className="lg:col-span-3 lg:col-start-7">
-                    <h4 className="text-sm text-muted">Tecnologias</h4>
+                    <h4 className="text-sm text-muted">{t.ui.technologies}</h4>
                     <p className="mt-3 text-[15px] leading-relaxed">{exp.technologies.join(", ")}</p>
                   </div>
                 </div>

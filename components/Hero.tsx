@@ -1,7 +1,11 @@
+"use client";
+
 import { MapPin } from "lucide-react";
-import { hero, site } from "@/data/content";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Hero() {
+  const { t } = useLanguage();
+  const { hero, site } = t;
   return (
     <section id="inicio" aria-labelledby="hero-titulo" className="shell pb-20 pt-32 md:pb-28 md:pt-40">
       <div className="motion-safe:animate-rise">
@@ -32,7 +36,7 @@ export default function Hero() {
               href="#projetos"
               className="inline-flex min-h-12 items-center justify-center rounded-[3px] bg-ink px-5 text-[15px] font-semibold text-canvas transition-colors duration-200 hover:bg-olive-strong"
             >
-              Explorar projetos
+              {t.ui.exploreProjects}
             </a>
             <a
               href={site.resumeUrl}
@@ -40,13 +44,13 @@ export default function Hero() {
               rel="noopener"
               className="inline-flex min-h-11 items-center justify-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
             >
-              <span className="border-b border-current">Ver currículo</span>
+              <span className="border-b border-current">{t.ui.viewResume}</span>
             </a>
           </div>
         </div>
 
         <div className="md:col-span-6 lg:col-span-5 md:row-start-1">
-          <h2 className="sr-only text-sm text-muted md:not-sr-only">Especialidades</h2>
+          <h2 className="sr-only text-sm text-muted md:not-sr-only">{t.ui.specialties}</h2>
           <ul className="border-t border-line md:mt-3">
             {hero.specialties.map((item) => (
               <li key={item} className="border-b border-line py-3 text-base md:text-lg">
