@@ -19,7 +19,6 @@ function ProjectImage({ image, project, soft, className }: {
       </div>
     );
   }
-  // Placeholder até existir screenshot real: preencher `src` em data/content.ts.
   return (
     <div
       role="img"
