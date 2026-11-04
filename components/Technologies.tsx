@@ -8,7 +8,7 @@ export default function Technologies() {
     <section id="tecnologias" aria-labelledby="tecnologias-titulo">
       <div className="shell py-20 md:py-28">
         <h2 id="tecnologias-titulo" className="text-[40px] font-medium leading-none tracking-[-0.04em] md:text-[72px]">
-          {t.ui.techTitle}
+          {t.ui.technologiesTitle}
         </h2>
         <dl className="mt-12 border-t border-line md:mt-14">
           {t.techGroups.map((group) => (

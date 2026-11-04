@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectLocale } from "@/components/LanguageProvider";
+import { detectLocale } from "@/lib/locale";
 
 describe("detectLocale", () => {
   it.each([

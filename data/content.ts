@@ -13,17 +13,67 @@ export type Project = {
   name: string;
   category: string;
   description: string;
-  role: string;
-  status: string;
+  role: MaybePending;
+  status: MaybePending;
   technologies: string[];
-  demoUrl: string;
-  sourceUrl?: string;
-  images: { label: string; src?: string }[];
+  demoUrl: MaybePending;
+  sourceUrl?: MaybePending;
+  images: [Screenshot, Screenshot?];
 };
+
+export type Screenshot = { label: string; src?: string };
 
 export type TechGroup = { label: string; items: string[] };
 
-export const isPlaceholder = (value: string) => value.startsWith("[");
+// Content not provided yet; rendered as a visible "[...]" marker (spec RN06).
+export type Pending = { pending: string };
+export type MaybePending = string | Pending;
+const pending = (label: string): Pending => ({ pending: label });
+export const isPending = (value: MaybePending): value is Pending => typeof value === "object";
+
+type UiText = {
+  skipToContent: string;
+  backToTop: string;
+  mainNav: string;
+  footerNav: string;
+  downloadResume: string;
+  viewResume: string;
+  openMenu: string;
+  closeMenu: string;
+  changeLanguage: string;
+  exploreProjects: string;
+  specialties: string;
+  experienceTitle: string;
+  currentAt: (company: string) => string;
+  responsibilities: string;
+  technologies: string;
+  projectsTitle: string;
+  projectRole: string;
+  projectStatus: string;
+  projectStack: string;
+  demo: string;
+  source: string;
+  opensNewTab: string;
+  imagePlaceholder: string;
+  replaceImage: string;
+  replaceImageOf: (project: string) => string;
+  aboutTitle: string;
+  technologiesTitle: string;
+};
+
+export type Content = {
+  htmlLang: string;
+  site: { name: string; shortName: string; role: string; location: string; year: number; resumeUrl: string; description: string };
+  ui: UiText;
+  hero: { headline: string; intro: string; specialties: string[] };
+  navLinks: { href: string; label: string }[];
+  experiences: Experience[];
+  projectsIntro: string;
+  projects: Project[];
+  about: { statement: string; paragraphs: string[]; education: { label: string; value: string }[] };
+  techGroups: TechGroup[];
+  contact: { heading: string; links: { label: string; value: string; href: string }[] };
+};
 
 export const locales: { code: Locale; label: string }[] = [
   { code: "pt", label: "Português" },
@@ -31,13 +81,47 @@ export const locales: { code: Locale; label: string }[] = [
 ];
 
 const name = "Kaike Dias Miranda";
+const shortName = "Kaike Dias";
 const resumeUrl = "/curriculo_kaike_dias_miranda.pdf";
 const email = "kaikedias98@gmail.com";
 
-const pt = {
+const emailLink = { value: email, href: `mailto:${email}` };
+const linkedinLink = { label: "LinkedIn", value: "linkedin.com/in/kaike-dias", href: "https://www.linkedin.com/in/kaike-dias/" };
+const githubLink = { label: "GitHub", value: "github.com/KaikeDias", href: "https://github.com/KaikeDias" };
+
+const etipi = {
+  company: "ETIPI",
+  current: true,
+  technologies: ["Java", "Spring Boot", "React.js", "Next.js", "RabbitMQ", "Keycloak", "Spring Security", "Docker", "Kubernetes", "OpenShift"],
+};
+const hiperdigi = { company: "Hiperdigi", current: false };
+const fapepi = { company: "FAPEPI", current: false, technologies: ["Flutter", "Dart"] };
+
+const doceria = {
+  name: "Doceria da Mary",
+  technologies: ["Angular", "TypeScript", "Supabase"],
+  demoUrl: "https://doceriadamary.vercel.app/",
+  sourceUrl: "https://github.com/KaikeDias/doceria-da-mary",
+};
+const nutriplan = {
+  name: "NutriPlan",
+  technologies: ["React", "TypeScript", "Vite"],
+  demoUrl: "https://nutri-plan-sand-two.vercel.app/",
+  sourceUrl: "https://github.com/KaikeDias/NutriPlan",
+};
+const vagaLivre = { name: "Vaga Livre", technologies: ["Flutter", "Dart", "Supabase", "OpenStreetMap"] };
+const nutriplus = { name: "NutriPlus", technologies: ["Java", "Spring Boot", "Vue.js", "Flutter"] };
+const doceriaShot = "/projetos/doceria-da-mary.png";
+const nutriplanShot = "/projetos/nutriplan.png";
+
+const frontendItems = ["React", "Next.js", "Angular", "Vue.js", "TypeScript", "JavaScript", "HTML", "CSS"];
+const devopsItems = ["Docker", "Kubernetes", "OpenShift", "CI/CD", "AWS", "Maven", "Jenkins"];
+
+const pt: Content = {
   htmlLang: "pt-BR",
   site: {
     name,
+    shortName,
     role: "Desenvolvedor Full Stack",
     location: "Brasil",
     year: 2026,
@@ -58,7 +142,7 @@ const pt = {
     exploreProjects: "Explorar projetos",
     specialties: "Especialidades",
     experienceTitle: "Experiência",
-    currentPosition: ", posição atual",
+    currentAt: (company) => `${company}, posição atual`,
     responsibilities: "Responsabilidades",
     technologies: "Tecnologias",
     projectsTitle: "Projetos em destaque",
@@ -70,9 +154,9 @@ const pt = {
     opensNewTab: ", abre em nova aba",
     imagePlaceholder: "Espaço reservado",
     replaceImage: "Substituir pela imagem real",
-    replaceImageOf: "do",
+    replaceImageOf: (project) => `Substituir pela imagem real do ${project}`,
     aboutTitle: "Sobre",
-    techTitle: "Tecnologias",
+    technologiesTitle: "Tecnologias",
   },
   hero: {
     headline: "Transformando ideias em soluções digitais",
@@ -92,10 +176,9 @@ const pt = {
   ],
   experiences: [
     {
+      ...etipi,
       role: "Desenvolvedor de Software",
-      company: "ETIPI",
       period: "Junho de 2025 – Presente",
-      current: true,
       responsibilities: [
         "Atuo como Desenvolvedor Full Stack criando microsserviços em Java com Spring Boot e micro frontends utilizando React.js e Next.js para integração entre sistemas da plataforma Gov.PI Cidadão, responsável por centralizar mais de 600 serviços digitais.",
         "Implementei arquiteturas assíncronas com RabbitMQ, filas e eventos para comunicação entre microsserviços, reduzindo o tempo de resposta de operações críticas em até 80%.",
@@ -107,24 +190,11 @@ const pt = {
         "Utilizo Inteligência Artificial aplicada ao desenvolvimento de software, estruturando fluxos com SDD, agentes especializados e automações ao longo do ciclo de entrega.",
         "Integro MCPs e ferramentas de contexto aos agentes de IA para apoiar implementação, revisão e aderência aos padrões técnicos, arquiteturais e de design da empresa.",
       ],
-      technologies: [
-        "Java",
-        "Spring Boot",
-        "React.js",
-        "Next.js",
-        "RabbitMQ",
-        "Keycloak",
-        "Spring Security",
-        "Docker",
-        "Kubernetes",
-        "OpenShift",
-      ],
     },
     {
+      ...hiperdigi,
       role: "Desenvolvedor Full Stack",
-      company: "Hiperdigi",
       period: "Junho de 2024 – Maio de 2025",
-      current: false,
       responsibilities: [
         "Atuei na manutenção e evolução de um sistema legado em Java 8, analisando código existente, corrigindo problemas e implementando novas regras de negócio com Spring Boot, JPA/Hibernate e APIs REST.",
         "Desenvolvi novas funcionalidades de ponta a ponta, desde a modelagem e persistência dos dados no backend até a integração com as interfaces do sistema, realizando também consultas e ajustes em SQL.",
@@ -135,70 +205,61 @@ const pt = {
       technologies: ["Java 8", "Spring Boot", "JPA/Hibernate", "APIs REST", "SQL", "Vue.js", "Bootstrap"],
     },
     {
+      ...fapepi,
       role: "Desenvolvedor Mobile Flutter",
-      company: "FAPEPI",
       period: "Abril de 2023 – Março de 2024",
-      current: false,
       responsibilities: [
         "Desenvolvi um aplicativo mobile multiplataforma em Flutter para a Coordenação da Juventude do Piauí, participando da implementação e evolução das funcionalidades da aplicação.",
         "Implementei a integração do aplicativo com APIs REST, realizando o consumo, tratamento e apresentação dos dados recebidos do backend nas interfaces mobile.",
         "Desenvolvi e mantive telas e componentes reutilizáveis em Flutter/Dart, trabalhando com navegação, formulários, validações e gerenciamento dos dados utilizados pela aplicação.",
         "Investiguei e corrigi problemas em funcionalidades existentes, realizando ajustes na interface e nos fluxos do aplicativo para melhorar sua estabilidade e usabilidade.",
       ],
-      technologies: ["Flutter", "Dart", "APIs REST"],
+      technologies: [...fapepi.technologies, "APIs REST"],
     },
-  ] as Experience[],
+  ],
   projectsIntro: "Aplicações construídas para necessidades concretas, da interface à gestão do conteúdo.",
   projects: [
     {
-      name: "Doceria da Mary",
+      ...doceria,
       category: "Site e painel administrativo",
       description:
         "Plataforma digital para uma doceria artesanal, composta por um site responsivo com cardápio digital e um painel administrativo. Os clientes exploram os produtos e fazem pedidos diretamente pelo WhatsApp, enquanto a doceria gerencia produtos, categorias e informações do site de forma independente.",
-      role: "[seu papel]",
-      status: "[completo ou em andamento]",
-      technologies: ["Angular", "TypeScript", "Supabase"],
-      demoUrl: "https://doceriadamary.vercel.app/",
-      sourceUrl: "https://github.com/KaikeDias/doceria-da-mary",
-      images: [{ label: "Página inicial do site", src: "/projetos/doceria-da-mary.png" }],
+      role: pending("seu papel"),
+      status: pending("completo ou em andamento"),
+      images: [{ label: "Página inicial do site", src: doceriaShot }],
     },
     {
-      name: "NutriPlan",
+      ...nutriplan,
       category: "Aplicação web",
       description:
         "Aplicação para nutricionistas que facilita a criação e organização de planos alimentares, com fluxo guiado para cadastro do profissional e do paciente, montagem de refeições e alimentos, pré-visualização e exportação dos planos em PDF. Conta com persistência local dos dados, validação de formulários e interface adaptável a diferentes dispositivos.",
-      role: "[seu papel]",
-      status: "[completo ou em andamento]",
-      technologies: ["React", "TypeScript", "Vite"],
-      demoUrl: "https://nutri-plan-sand-two.vercel.app/",
-      sourceUrl: "https://github.com/KaikeDias/NutriPlan",
-      images: [{ label: "Etapa de perfil profissional do fluxo guiado", src: "/projetos/nutriplan.png" }],
+      role: pending("seu papel"),
+      status: pending("completo ou em andamento"),
+      images: [{ label: "Etapa de perfil profissional do fluxo guiado", src: nutriplanShot }],
     },
     {
-      name: "Vaga Livre",
+      ...vagaLivre,
       category: "Aplicativo mobile",
       description:
         "Aplicativo mobile em Flutter para localização e reserva remota de vagas de estacionamento. Integrado ao OpenStreetMap, permite visualizar estacionamentos disponíveis no mapa, consultar opções de vagas, realizar reservas e efetuar o pagamento diretamente pela plataforma.",
-      role: "[seu papel]",
-      status: "[completo ou em andamento]",
-      technologies: ["Flutter", "Dart", "Supabase", "OpenStreetMap"],
-      demoUrl: "[link de demonstração]",
-      sourceUrl: "[link do código-fonte]",
+      role: pending("seu papel"),
+      status: pending("completo ou em andamento"),
+      demoUrl: pending("link de demonstração"),
+      sourceUrl: pending("link do código-fonte"),
       images: [{ label: "Screenshot do mapa de estacionamentos" }],
     },
     {
-      name: "NutriPlus",
+      ...nutriplus,
       category: "Plataforma web e mobile · TCC",
       description:
         "Plataforma de acompanhamento nutricional desenvolvida como TCC, composta por uma aplicação web para nutricionistas e um aplicativo mobile para pacientes, integrados à mesma API REST. Permite gerenciar pacientes, criar e acompanhar dietas, disponibilizar cardápios e orientações, consultar documentos e registrar refeições.",
-      role: "[seu papel]",
-      status: "[completo ou em andamento]",
-      technologies: ["Java", "Spring Boot", "Vue.js", "Flutter"],
-      demoUrl: "[link de demonstração]",
-      sourceUrl: "[link do código-fonte]",
+      role: pending("seu papel"),
+      status: pending("completo ou em andamento"),
+      demoUrl: pending("link de demonstração"),
+      sourceUrl: pending("link do código-fonte"),
       images: [{ label: "Screenshot da aplicação web" }, { label: "Aplicativo do paciente" }],
     },
-  ] as Project[],
+  ],
   about: {
     statement:
       "Atuo como desenvolvedor Full Stack, do frontend ao backend, com interesse em arquitetura e engenharia de software.",
@@ -213,29 +274,27 @@ const pt = {
     ],
   },
   techGroups: [
-    { label: "Frontend", items: ["React", "Next.js", "Angular", "Vue.js", "TypeScript", "JavaScript", "HTML", "CSS"] },
+    { label: "Frontend", items: frontendItems },
     {
       label: "Backend",
       items: ["Java 8+", "Spring Boot", "Spring MVC", "Spring Security", "JPA/Hibernate", "Microsserviços", "APIs RESTful", "JUnit", "RabbitMQ", "Kafka", "Keycloak"],
     },
     { label: "Banco de dados", items: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Modelagem de dados", "Consultas SQL"] },
-    { label: "DevOps e Cloud", items: ["Docker", "Kubernetes", "OpenShift", "CI/CD", "AWS", "Maven", "Jenkins"] },
+    { label: "DevOps e Cloud", items: devopsItems },
     {
       label: "Qualidade e boas práticas",
       items: ["POO", "SOLID", "Design Patterns", "Testes unitários", "Testes de integração", "Code Review", "Git"],
     },
-  ] as TechGroup[],
+  ],
   contact: {
     heading: "Vamos construir algo interessante?",
     links: [
-      { label: "E-mail", value: email, href: `mailto:${email}` },
-      { label: "LinkedIn", value: "linkedin.com/in/kaike-dias", href: "https://www.linkedin.com/in/kaike-dias/" },
-      { label: "GitHub", value: "github.com/KaikeDias", href: "https://github.com/KaikeDias" },
+      { label: "E-mail", ...emailLink },
+      linkedinLink,
+      githubLink,
     ],
   },
 };
-
-export type Content = typeof pt;
 
 const en: Content = {
   htmlLang: "en",
@@ -259,7 +318,7 @@ const en: Content = {
     exploreProjects: "Explore projects",
     specialties: "Specialties",
     experienceTitle: "Experience",
-    currentPosition: ", current position",
+    currentAt: (company) => `${company}, current position`,
     responsibilities: "Responsibilities",
     technologies: "Technologies",
     projectsTitle: "Featured projects",
@@ -271,9 +330,9 @@ const en: Content = {
     opensNewTab: ", opens in a new tab",
     imagePlaceholder: "Placeholder",
     replaceImage: "Replace with the real image",
-    replaceImageOf: "of",
+    replaceImageOf: (project) => `Replace with the real image of ${project}`,
     aboutTitle: "About",
-    techTitle: "Technologies",
+    technologiesTitle: "Technologies",
   },
   hero: {
     headline: "Turning ideas into digital solutions",
@@ -293,7 +352,7 @@ const en: Content = {
   ],
   experiences: [
     {
-      ...pt.experiences[0],
+      ...etipi,
       role: "Software Developer",
       period: "June 2025 – Present",
       responsibilities: [
@@ -309,7 +368,7 @@ const en: Content = {
       ],
     },
     {
-      ...pt.experiences[1],
+      ...hiperdigi,
       role: "Full Stack Developer",
       period: "June 2024 – May 2025",
       responsibilities: [
@@ -322,7 +381,7 @@ const en: Content = {
       technologies: ["Java 8", "Spring Boot", "JPA/Hibernate", "REST APIs", "SQL", "Vue.js", "Bootstrap"],
     },
     {
-      ...pt.experiences[2],
+      ...fapepi,
       role: "Flutter Mobile Developer",
       period: "April 2023 – March 2024",
       responsibilities: [
@@ -331,49 +390,49 @@ const en: Content = {
         "Built and maintained reusable screens and components in Flutter/Dart, working with navigation, forms, validation and management of the app's data.",
         "Investigated and fixed issues in existing features, adjusting the interface and app flows to improve stability and usability.",
       ],
-      technologies: ["Flutter", "Dart", "REST APIs"],
+      technologies: [...fapepi.technologies, "REST APIs"],
     },
   ],
   projectsIntro: "Applications built for real needs, from the interface to content management.",
   projects: [
     {
-      ...pt.projects[0],
+      ...doceria,
       category: "Website and admin panel",
       description:
         "Digital platform for an artisanal bakery, made up of a responsive website with a digital menu and an admin panel. Customers browse products and order directly through WhatsApp, while the bakery manages products, categories and site information on its own.",
-      role: "[your role]",
-      status: "[completed or in progress]",
-      images: [{ label: "Website home page", src: "/projetos/doceria-da-mary.png" }],
+      role: pending("your role"),
+      status: pending("completed or in progress"),
+      images: [{ label: "Website home page", src: doceriaShot }],
     },
     {
-      ...pt.projects[1],
+      ...nutriplan,
       category: "Web application",
       description:
         "Application for nutritionists that makes it easier to create and organize meal plans, with a guided flow for registering the professional and the patient, building meals and foods, and previewing and exporting plans as PDF. It includes local data persistence, form validation and an interface that adapts to different devices.",
-      role: "[your role]",
-      status: "[completed or in progress]",
-      images: [{ label: "Professional profile step of the guided flow", src: "/projetos/nutriplan.png" }],
+      role: pending("your role"),
+      status: pending("completed or in progress"),
+      images: [{ label: "Professional profile step of the guided flow", src: nutriplanShot }],
     },
     {
-      ...pt.projects[2],
+      ...vagaLivre,
       category: "Mobile app",
       description:
         "Flutter mobile app for finding and remotely booking parking spots. Integrated with OpenStreetMap, it shows available parking lots on a map, lists spot options, and lets users book and pay directly in the app.",
-      role: "[your role]",
-      status: "[completed or in progress]",
-      demoUrl: "[demo link]",
-      sourceUrl: "[source code link]",
+      role: pending("your role"),
+      status: pending("completed or in progress"),
+      demoUrl: pending("demo link"),
+      sourceUrl: pending("source code link"),
       images: [{ label: "Screenshot of the parking lot map" }],
     },
     {
-      ...pt.projects[3],
+      ...nutriplus,
       category: "Web and mobile platform · Final thesis",
       description:
         "Nutrition follow-up platform developed as my undergraduate final project, made up of a web application for nutritionists and a mobile app for patients, both integrated with the same REST API. It lets nutritionists manage patients, create and track diets, share menus and guidance, view documents and log meals.",
-      role: "[your role]",
-      status: "[completed or in progress]",
-      demoUrl: "[demo link]",
-      sourceUrl: "[source code link]",
+      role: pending("your role"),
+      status: pending("completed or in progress"),
+      demoUrl: pending("demo link"),
+      sourceUrl: pending("source code link"),
       images: [{ label: "Screenshot of the web application" }, { label: "Patient app" }],
     },
   ],
@@ -391,13 +450,13 @@ const en: Content = {
     ],
   },
   techGroups: [
-    pt.techGroups[0],
+    { label: "Frontend", items: frontendItems },
     {
       label: "Backend",
       items: ["Java 8+", "Spring Boot", "Spring MVC", "Spring Security", "JPA/Hibernate", "Microservices", "RESTful APIs", "JUnit", "RabbitMQ", "Kafka", "Keycloak"],
     },
     { label: "Databases", items: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Data modeling", "SQL queries"] },
-    { label: "DevOps & Cloud", items: pt.techGroups[3].items },
+    { label: "DevOps & Cloud", items: devopsItems },
     {
       label: "Quality & best practices",
       items: ["OOP", "SOLID", "Design Patterns", "Unit testing", "Integration testing", "Code Review", "Git"],
@@ -405,10 +464,8 @@ const en: Content = {
   ],
   contact: {
     heading: "Shall we build something interesting?",
-    links: [{ ...pt.contact.links[0], label: "Email" }, pt.contact.links[1], pt.contact.links[2]],
+    links: [{ label: "Email", ...emailLink }, linkedinLink, githubLink],
   },
 };
 
 export const content: Record<Locale, Content> = { pt, en };
-
-export const site = pt.site;

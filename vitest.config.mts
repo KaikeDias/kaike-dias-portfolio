@@ -7,6 +7,6 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL(".", import.meta.url)) } },
   test: {
     environment: "jsdom",
-    coverage: { include: ["components/LanguageProvider.tsx", "components/LanguageSwitcher.tsx", "components/Header.tsx"] },
+    coverage: { include: ["app/**", "components/**", "data/**", "lib/**"] },
   },
 });

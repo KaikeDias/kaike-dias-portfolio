@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, Menu, X } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-export function Logo() {
+function Logo() {
+  const { t } = useLanguage();
   return (
     <span className="text-[22px] font-bold tracking-[-0.04em]">
-      Kaike Dias<span className="text-olive">.</span>
+      {t.site.shortName}<span className="text-olive">.</span>
     </span>
   );
 }
@@ -16,10 +17,15 @@ export function Logo() {
 export default function Header() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      menuButtonRef.current?.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
@@ -64,6 +70,7 @@ export default function Header() {
             <LanguageSwitcher />
 
             <button
+              ref={menuButtonRef}
               type="button"
               className="-mr-2.5 inline-flex size-11 items-center justify-center md:hidden"
               aria-expanded={open}
