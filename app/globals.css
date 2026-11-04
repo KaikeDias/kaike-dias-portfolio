@@ -41,7 +41,6 @@
   }
 }
 
-/* Destaque visual dos placeholders, pronto para ser removido ao preencher os dados. */
 @utility placeholder {
   background-color: var(--color-surface);
   color: var(--color-ink);

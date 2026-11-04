@@ -38,7 +38,7 @@ export default function LanguageSwitcher() {
         aria-controls="idiomas"
         aria-label={t.ui.changeLanguage}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex min-h-11 items-center gap-1.5 text-[15px] font-semibold uppercase transition-colors duration-200 hover:text-olive-strong"
+        className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 text-[15px] font-semibold uppercase transition-colors duration-200 hover:text-olive-strong"
       >
         <Languages aria-hidden size={18} strokeWidth={1.75} />
         {locale}
@@ -60,7 +60,7 @@ export default function LanguageSwitcher() {
                 setLocale(code);
                 setOpen(false);
               }}
-              className="flex min-h-11 w-full items-center justify-between gap-4 px-4 text-left transition-colors duration-200 hover:bg-surface-soft"
+              className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-4 px-4 text-left transition-colors duration-200 hover:bg-surface-soft"
             >
               {label}
               {code === locale && <Check aria-hidden size={16} strokeWidth={1.75} />}

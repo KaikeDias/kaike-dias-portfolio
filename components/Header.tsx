@@ -8,7 +8,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export function Logo() {
   return (
     <span className="text-[22px] font-bold tracking-[-0.04em]">
-      kaike<span className="text-olive">.</span>
+      Kaike Dias<span className="text-olive">.</span>
     </span>
   );
 }

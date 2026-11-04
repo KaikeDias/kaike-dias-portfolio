@@ -17,7 +17,6 @@ export default function Experience() {
             <li key={`${exp.company}-${exp.period}`} className="grid md:grid-cols-12 md:gap-6">
               <p className="hidden pt-2 text-[15px] md:col-span-3 md:block">{exp.period}</p>
 
-              {/* Linha do tempo: o traço segue até o próximo item, exceto no último. */}
               <div
                 className={`relative border-l border-line pl-7 md:col-span-9 md:pl-8 ${
                   i === experiences.length - 1 ? "pb-0" : "pb-14 md:pb-20"

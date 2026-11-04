@@ -1,5 +1,3 @@
-// Fonte: portfolio-kaike-dias.md. Valores entre colchetes são placeholders a substituir.
-
 export type Locale = "pt" | "en";
 
 export type Experience = {
@@ -20,7 +18,6 @@ export type Project = {
   technologies: string[];
   demoUrl: string;
   sourceUrl?: string;
-  /** Primeira imagem é a principal; a segunda (opcional) aparece só no layout alternado. */
   images: { label: string; src?: string }[];
 };
 
@@ -28,7 +25,6 @@ export type TechGroup = { label: string; items: string[] };
 
 export const isPlaceholder = (value: string) => value.startsWith("[");
 
-/** Rótulos no próprio idioma, iguais em qualquer idioma ativo. */
 export const locales: { code: Locale; label: string }[] = [
   { code: "pt", label: "Português" },
   { code: "en", label: "English" },
@@ -415,5 +411,4 @@ const en: Content = {
 
 export const content: Record<Locale, Content> = { pt, en };
 
-/** Conteúdo do HTML estático e dos metadados (fora de escopo traduzir o SEO). */
 export const site = pt.site;
