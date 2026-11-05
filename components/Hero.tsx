@@ -2,12 +2,13 @@
 
 import { MapPin } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
+import ExternalLink from "@/components/ExternalLink";
 
 export default function Hero() {
   const { t } = useLanguage();
   const { hero, site } = t;
   return (
-    <section id="inicio" aria-labelledby="hero-titulo" className="shell pb-20 pt-32 md:pb-28 md:pt-40">
+    <section id="inicio" aria-labelledby="inicio-titulo" className="shell pb-20 pt-32 md:pb-28 md:pt-40">
       <div className="motion-safe:animate-rise">
         <p className="flex flex-wrap items-center gap-x-7 gap-y-1 text-[15px] md:text-base">
           <span>
@@ -20,7 +21,7 @@ export default function Hero() {
         </p>
 
         <h1
-          id="hero-titulo"
+          id="inicio-titulo"
           className="mt-8 text-[44px] font-medium leading-[1.02] tracking-[-0.045em] sm:text-[64px] md:mt-14 md:text-[88px] lg:text-[116px] lg:leading-[0.98]"
         >
           {hero.headline}
@@ -34,18 +35,16 @@ export default function Hero() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
             <a
               href="#projetos"
-              className="inline-flex min-h-12 items-center justify-center rounded-[3px] bg-ink px-5 text-[15px] font-semibold text-canvas transition-colors duration-200 hover:bg-olive-strong"
+              className="group inline-flex min-h-12 items-center justify-center rounded-[3px] bg-ink px-5 text-[15px] font-semibold text-canvas transition-colors duration-200 hover:bg-olive-strong"
             >
-              {t.ui.exploreProjects}
+              <span className="link-underline">{t.ui.exploreProjects}</span>
             </a>
-            <a
+            <ExternalLink
               href={site.resumeUrl}
-              target="_blank"
-              rel="noopener"
-              className="inline-flex min-h-11 items-center justify-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
+              className="group inline-flex min-h-11 items-center justify-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
             >
-              <span className="border-b border-current">{t.ui.viewResume}</span>
-            </a>
+              <span className="link-underline">{t.ui.viewResume}</span>
+            </ExternalLink>
           </div>
         </div>
 

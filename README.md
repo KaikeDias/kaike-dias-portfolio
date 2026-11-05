@@ -41,7 +41,8 @@ Todo o texto vem de um único arquivo tipado (`data/content.ts`). Para adicionar
 
 - Seções na ordem: Hero, Experiência, Projetos, Sobre, Tecnologias, Contato e Footer.
 - Header fixo com navegação por âncoras e botão para baixar o currículo.
-- Menu hambúrguer no mobile, com `aria-expanded`, fechamento ao escolher um item e com a tecla `Esc`.
+- Seletor de idioma (Português / English) na navbar. O idioma inicial segue o navegador, e a escolha manual fica salva no `localStorage`.
+- Menu hambúrguer no mobile, com `aria-expanded`, fechamento ao escolher um item e com a tecla `Esc` (o foco volta para o botão).
 - Linha do tempo de experiências, com destaque para a posição atual.
 - Projetos em composições alternadas, com categoria, descrição, papel, status, stack, link de demonstração e link do código-fonte.
 - Placeholders identificados (texto entre colchetes) para dados e imagens ainda não fornecidos.
@@ -49,7 +50,7 @@ Todo o texto vem de um único arquivo tipado (`data/content.ts`). Para adicionar
 - Layout responsivo de 390px a 1440px+, sem rolagem horizontal.
 - Acessibilidade: HTML semântico, um único `h1`, link "Pular para o conteúdo", foco visível, alvos de toque de pelo menos 44px e contraste mínimo de 4.5:1.
 - Animação de entrada no hero, desativada com `prefers-reduced-motion`.
-- Metadados e Open Graph em português.
+- Metadados e Open Graph em português (o HTML estático é gerado em português e o idioma é trocado no cliente).
 
 ---
 
@@ -70,6 +71,7 @@ Todo o texto vem de um único arquivo tipado (`data/content.ts`). Para adicionar
 ### Qualidade
 
 - ESLint (`eslint-config-next`)
+- Vitest + Testing Library (jsdom)
 
 ---
 
@@ -77,13 +79,23 @@ Todo o texto vem de um único arquivo tipado (`data/content.ts`). Para adicionar
 
 ### Visão geral
 
-A aplicação tem uma única rota (`app/page.tsx`), que compõe um componente por seção. Todos são Server Components, renderizados no build, exceto o `Header`, que é Client Component por causa do estado do menu mobile.
+A aplicação tem uma única rota (`app/page.tsx`), que compõe um componente por seção dentro do `LanguageProvider`. As seções são Client Components porque leem os textos do idioma ativo pelo hook `useLanguage()`. O HTML continua sendo gerado no build (em português) e o idioma detectado ou salvo é aplicado no carregamento do cliente.
+
+### Idiomas
+
+- `components/LanguageProvider.tsx`: guarda o idioma ativo, expõe `useLanguage()` (`locale`, `t`, `setLocale`) e atualiza `<html lang>`.
+- `lib/locale.ts`: `detectLocale()` (escolha salva válida → idioma do navegador → inglês) e a chave do `localStorage`.
+- `components/LanguageSwitcher.tsx`: dropdown da navbar, que fecha com `Esc` ou com clique fora.
+
+A especificação da funcionalidade está em `specs/selecao-idioma/`.
 
 ### Conteúdo
 
-`data/content.ts` concentra todos os textos e links, com tipos para experiências (`Experience`), projetos (`Project`) e grupos de tecnologias (`TechGroup`). Os componentes só leem esses dados, sem texto fixo no JSX.
+`data/content.ts` concentra todos os textos e links dos dois idiomas (`content.pt` e `content.en`), com tipos para experiências (`Experience`), projetos (`Project`) e grupos de tecnologias (`TechGroup`). Os valores que não se traduzem (empresas, tecnologias, URLs, imagens) ficam em constantes compartilhadas pelos dois idiomas. Os componentes só leem esses dados, sem texto fixo no JSX.
 
-Valores que começam com `[` são tratados como placeholder pelo helper `isPlaceholder`: aparecem com destaque visual e, no caso de links, não são renderizados como `<a>`.
+Dados ainda não fornecidos são marcados com `pending("...")` (tipo `Pending`). Os componentes verificam com `isPending`, exibem o texto entre colchetes com destaque visual e, no caso de links, não renderizam `<a>`.
+
+Regra de organização: `data/` guarda o conteúdo, seus tipos e helpers sobre o conteúdo (`Locale`, `locales`, `isPending`); `lib/` guarda a lógica que depende do navegador (`detectLocale`, chave do `localStorage`).
 
 ### Design tokens
 
@@ -112,23 +124,31 @@ As imagens dos projetos usam `next/image` com `images.unoptimized`, já que a ex
 ```text
 app/
 	globals.css            # Tokens do tema, utilities e estilos globais
-	layout.tsx             # Fonte, metadados e link "Pular para o conteúdo"
+	layout.tsx             # Fonte, metadados e <html lang> inicial
 	page.tsx               # Composição das seções
 components/
-	Header.tsx             # Header fixo e menu mobile (Client Component)
+	LanguageProvider.tsx   # Contexto do idioma ativo e hook useLanguage()
+	LanguageSwitcher.tsx   # Dropdown de idioma da navbar
+	Header.tsx             # Header fixo, menu mobile e link "Pular para o conteúdo"
 	Hero.tsx               # Apresentação e especialidades
 	Experience.tsx         # Linha do tempo de experiências
 	Projects.tsx           # Projetos, imagens e placeholders
 	About.tsx              # Sobre e formação
 	Technologies.tsx       # Grupos de tecnologias
 	Contact.tsx            # Links de contato e currículo
+	ExternalLink.tsx       # Link em nova aba com aviso para leitores de tela
 	Footer.tsx             # Rodapé
 data/
-	content.ts             # Conteúdo tipado do site
+	content.ts             # Conteúdo tipado do site (pt e en)
+lib/
+	locale.ts              # Detecção do idioma inicial
+docs/
+	portfolio-kaike-dias.md  # Fonte original do conteúdo
 public/
 	curriculo_kaike_dias_miranda.pdf
 	projetos/              # Screenshots dos projetos
-portfolio-kaike-dias.md  # Fonte original do conteúdo
+specs/                   # Especificações e tarefas por funcionalidade (SDD)
+tests/                   # Testes automatizados (Vitest)
 ```
 
 ---
@@ -180,8 +200,10 @@ Depois, é só abrir a URL mostrada no terminal (por padrão, `http://localhost:
 | `pnpm dev` | Inicia o servidor de desenvolvimento |
 | `pnpm build` | Gera a exportação estática na pasta `out/` |
 | `pnpm lint` | Executa o ESLint no projeto |
+| `pnpm test` | Executa os testes com Vitest |
+| `pnpm test:coverage` | Executa os testes com relatório de cobertura |
 
-> Com `output: 'export'`, o `pnpm start` não se aplica. Para conferir a build, sirva a pasta `out/` com qualquer servidor estático.
+> Com `output: 'export'`, não existe `pnpm start`. Para conferir a build, sirva a pasta `out/` com qualquer servidor estático.
 
 ---
 
@@ -191,7 +213,7 @@ Todo o conteúdo fica em `data/content.ts`.
 
 ### Adicionar um projeto
 
-1. Inclua um item em `projects`, com nome, categoria, descrição, papel, status, tecnologias e links.
+1. Inclua um item em `projects` nos dois idiomas (`pt` e `en`), com nome, categoria, descrição, papel, status, tecnologias e links. Valores que não se traduzem podem ir em uma constante compartilhada.
 2. Coloque o screenshot em `public/projetos/` e informe o caminho em `images[0].src`.
 3. Se houver uma segunda imagem, adicione-a em `images`. Ela aparece nos projetos com layout alternado.
 
@@ -199,19 +221,21 @@ Os projetos alternam automaticamente entre as duas composições: imagem grande 
 
 ### Adicionar uma experiência
 
-Inclua um item em `experiences`. Use `current: true` na posição atual para destacá-la na linha do tempo.
+Inclua um item em `experiences` nos dois idiomas. Use `current: true` na posição atual para destacá-la na linha do tempo.
 
 ### Placeholders
 
-Qualquer valor entre colchetes, como `[seu papel]`, é exibido como pendente. Basta substituir pelo valor real.
+Campos ainda sem valor usam `pending("seu papel")` e aparecem como `[seu papel]` no site. Basta substituir pelo valor real (uma string).
 
 ---
 
 <h2 id="testes">🧪 Testes</h2>
 
-O projeto ainda não tem testes automatizados. A verificação atual é feita com:
+Os testes ficam em `tests/` e cobrem a detecção de idioma, a troca de idioma na página e a equivalência do conteúdo entre `pt` e `en`.
 
 ```bash
+pnpm test
+pnpm test:coverage
 pnpm lint
 pnpm build
 ```
