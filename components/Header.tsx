@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, Menu, X } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-export function Logo() {
+function Logo() {
+  const { t } = useLanguage();
   return (
     <span className="text-[22px] font-bold tracking-[-0.04em]">
-      Kaike Dias<span className="text-olive">.</span>
+      {t.site.shortName}<span className="text-olive">.</span>
     </span>
   );
 }
@@ -16,10 +17,15 @@ export function Logo() {
 export default function Header() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      menuButtonRef.current?.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
@@ -45,8 +51,8 @@ export default function Header() {
               <ul className="flex items-center gap-9 text-[15px] font-medium">
                 {t.navLinks.map((link) => (
                   <li key={link.href}>
-                    <a href={link.href} className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-olive-strong">
-                      {link.label}
+                    <a href={link.href} className="group inline-flex min-h-11 items-center transition-colors duration-200 hover:text-olive-strong">
+                      <span className="link-underline">{link.label}</span>
                     </a>
                   </li>
                 ))}
@@ -54,16 +60,17 @@ export default function Header() {
               <a
                 href={t.site.resumeUrl}
                 download
-                className="inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
+                className="group inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
               >
                 <Download aria-hidden size={18} strokeWidth={1.75} />
-                <span className="border-b border-current">{t.ui.downloadResume}</span>
+                <span className="link-underline">{t.ui.downloadResume}</span>
               </a>
             </nav>
 
             <LanguageSwitcher />
 
             <button
+              ref={menuButtonRef}
               type="button"
               className="-mr-2.5 inline-flex size-11 items-center justify-center md:hidden"
               aria-expanded={open}

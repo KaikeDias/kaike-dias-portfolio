@@ -33,8 +33,7 @@ export default function Experience() {
                   {exp.role}
                 </h3>
                 <p className="mt-1 text-lg text-olive-strong md:text-xl">
-                  {exp.company}
-                  {exp.current && t.ui.currentPosition}
+                  {exp.current ? t.ui.currentAt(exp.company) : exp.company}
                 </p>
 
                 <div className="mt-8 grid gap-8 lg:grid-cols-9 lg:gap-6">
