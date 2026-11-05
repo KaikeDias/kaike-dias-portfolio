@@ -50,9 +50,9 @@ function ProjectLink({ href, label }: { href?: MaybePending; label: string }) {
   return (
     <ExternalLink
       href={href}
-      className="inline-flex min-h-11 items-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
+      className="group inline-flex min-h-11 items-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
     >
-      <span className="border-b border-current">{label}</span>
+      <span className="link-underline">{label}</span>
     </ExternalLink>
   );
 }
@@ -105,6 +105,13 @@ export default function Projects() {
             return (
               <li key={project.name}>
                 <article className="grid gap-6 lg:grid-cols-12">
+                  {project.images.length === 3 ? (
+                    <div className="grid grid-cols-3 gap-4 lg:col-span-8 lg:gap-6">
+                      {project.images.map((image) => (
+                        <ProjectImage key={image.label} image={image} projectName={project.name} className="aspect-[107/227]" />
+                      ))}
+                    </div>
+                  ) : (
                   <div className={`grid gap-4 lg:col-span-8 lg:gap-6 ${secondary ? "grid-cols-8" : ""}`}>
                     <ProjectImage
                       image={main}
@@ -120,6 +127,7 @@ export default function Projects() {
                       />
                     )}
                   </div>
+                  )}
                   <div className={alternate ? "lg:order-first lg:col-span-4 lg:pr-6" : "lg:col-span-4 lg:self-end"}>
                     <ProjectInfo project={project} />
                   </div>

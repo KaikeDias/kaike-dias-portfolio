@@ -46,26 +46,23 @@ describe("RN04: seções exibem o conteúdo do idioma ativo", () => {
     expect(screen.getByText(en.ui.currentAt(current?.company ?? ""))).toBeTruthy();
   });
 
-  it("Projects mostra cada projeto, screenshots reais e placeholders de imagem", () => {
+  it("Projects mostra cada projeto e suas screenshots reais", () => {
     renderIn("en", <Projects />);
     for (const project of en.projects) {
       expect(screen.getByRole("heading", { level: 3, name: project.name })).toBeTruthy();
     }
     const [withShot] = en.projects.filter((p) => p.images[0].src);
     expect(screen.getByRole("img", { name: `${withShot.images[0].label}, ${withShot.name}` })).toBeTruthy();
-    const [withoutShot] = en.projects.filter((p) => !p.images[0].src);
-    expect(
-      screen.getByRole("img", { name: `${en.ui.imagePlaceholder}: ${withoutShot.images[0].label}, ${withoutShot.name}` }),
-    ).toBeTruthy();
-    const realDemo = en.projects.find((p) => !isPending(p.demoUrl));
+    const realDemo = en.projects.find((p) => p.demoUrl && !isPending(p.demoUrl));
     expect(screen.getAllByRole("link", { name: `${en.ui.demo}${en.ui.opensNewTab}` })[0].getAttribute("href")).toBe(realDemo?.demoUrl);
   });
 
-  it("Projects mostra a segunda imagem quando o projeto tem duas", () => {
+  it("Projects mostra as três telas quando o projeto tem três imagens", () => {
     renderIn("en", <Projects />);
-    const project = en.projects.find((p) => p.images[1]);
-    const second = project?.images[1];
-    expect(screen.getByRole("img", { name: `${en.ui.imagePlaceholder}: ${second?.label}, ${project?.name}` })).toBeTruthy();
+    const project = en.projects.find((p) => p.images.length === 3);
+    for (const image of project?.images ?? []) {
+      expect(screen.getByRole("img", { name: `${image?.label}, ${project?.name}` })).toBeTruthy();
+    }
   });
 
   it("About mostra a apresentação e a formação", () => {
@@ -122,18 +119,6 @@ describe("RN04: seções exibem o conteúdo do idioma ativo", () => {
     });
     expect(menu.getAttribute("aria-label")).toBe(en.ui.openMenu);
     expect(document.activeElement).toBe(menu);
-  });
-
-  it("RN06: dados pendentes aparecem entre colchetes e links pendentes não viram <a>", () => {
-    const { container } = renderIn("pt", <Projects />);
-    const project = pt.projects.find((p) => isPending(p.demoUrl));
-    const demo = project?.demoUrl;
-    if (!demo || !isPending(demo) || !isPending(project.role)) throw new Error("fixture: expected a pending project");
-    expect(container.textContent).toContain(`[${demo.pending}]`);
-    expect(container.textContent).toContain(`[${project.role.pending}]`);
-    const realDemos = pt.projects.filter((p) => !isPending(p.demoUrl)).length;
-    expect(screen.getAllByRole("link", { name: `${pt.ui.demo}${pt.ui.opensNewTab}` })).toHaveLength(realDemos);
-    expect(container.querySelector('a[href*="["], a[href*="object"]')).toBeNull();
   });
 
   it("useLanguage fora do LanguageProvider falha com mensagem clara", () => {

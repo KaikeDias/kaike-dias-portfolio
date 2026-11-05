@@ -16,9 +16,9 @@ export type Project = {
   role: MaybePending;
   status: MaybePending;
   technologies: string[];
-  demoUrl: MaybePending;
+  demoUrl?: MaybePending;
   sourceUrl?: MaybePending;
-  images: [Screenshot, Screenshot?];
+  images: [Screenshot, Screenshot?] | [Screenshot, Screenshot, Screenshot];
 };
 
 export type Screenshot = { label: string; src?: string };
@@ -83,6 +83,7 @@ export const locales: { code: Locale; label: string }[] = [
 const name = "Kaike Dias Miranda";
 const shortName = "Kaike Dias";
 const resumeUrl = "/curriculo_kaike_dias_miranda.pdf";
+const resumeUrlEn = "/kaike-dias-miranda-resume.pdf";
 const email = "kaikedias98@gmail.com";
 
 const emailLink = { value: email, href: `mailto:${email}` };
@@ -92,7 +93,7 @@ const githubLink = { label: "GitHub", value: "github.com/KaikeDias", href: "http
 const etipi = {
   company: "ETIPI",
   current: true,
-  technologies: ["Java", "Spring Boot", "React.js", "Next.js", "RabbitMQ", "Keycloak", "Spring Security", "Docker", "Kubernetes", "OpenShift"],
+  technologies: ["Java", "Spring Boot", "Quarkus", "React.js", "Next.js", "RabbitMQ", "Keycloak", "Spring Security", "Docker", "Kubernetes", "OpenShift"],
 };
 const hiperdigi = { company: "Hiperdigi", current: false };
 const fapepi = { company: "FAPEPI", current: false, technologies: ["Flutter", "Dart"] };
@@ -110,9 +111,9 @@ const nutriplan = {
   sourceUrl: "https://github.com/KaikeDias/NutriPlan",
 };
 const vagaLivre = { name: "Vaga Livre", technologies: ["Flutter", "Dart", "Supabase", "OpenStreetMap"] };
-const nutriplus = { name: "NutriPlus", technologies: ["Java", "Spring Boot", "Vue.js", "Flutter"] };
 const doceriaShot = "/projetos/doceria-da-mary.png";
 const nutriplanShot = "/projetos/nutriplan.png";
+const vagaLivreShots = ["login", "home", "park-details"].map((screen) => `/projetos/vaga-livre-${screen}.png`);
 
 const frontendItems = ["React", "Next.js", "Angular", "Vue.js", "TypeScript", "JavaScript", "HTML", "CSS"];
 const devopsItems = ["Docker", "Kubernetes", "OpenShift", "CI/CD", "AWS", "Maven", "Jenkins"];
@@ -123,7 +124,7 @@ const pt: Content = {
     name,
     shortName,
     role: "Desenvolvedor Full Stack",
-    location: "Brasil",
+    location: "Teresina, Piauí. Brasil",
     year: 2026,
     resumeUrl,
     description:
@@ -159,7 +160,7 @@ const pt: Content = {
     technologiesTitle: "Tecnologias",
   },
   hero: {
-    headline: "Transformando ideias em soluções digitais",
+    headline: "Desenvolver é muito mais do que implementar",
     intro:
       "Desenvolvedor Full Stack com mais de 3 anos de experiência, da construção de interfaces à implementação de APIs, integrações e regras de negócio, com Java, Spring Boot, React, Next.js e Angular.",
     specialties: [
@@ -224,8 +225,8 @@ const pt: Content = {
       category: "Site e painel administrativo",
       description:
         "Plataforma digital para uma doceria artesanal, composta por um site responsivo com cardápio digital e um painel administrativo. Os clientes exploram os produtos e fazem pedidos diretamente pelo WhatsApp, enquanto a doceria gerencia produtos, categorias e informações do site de forma independente.",
-      role: pending("seu papel"),
-      status: pending("completo ou em andamento"),
+      role: "Desenvolvedor Full Stack - Projeto pessoal",
+      status: "Completo",
       images: [{ label: "Página inicial do site", src: doceriaShot }],
     },
     {
@@ -233,8 +234,8 @@ const pt: Content = {
       category: "Aplicação web",
       description:
         "Aplicação para nutricionistas que facilita a criação e organização de planos alimentares, com fluxo guiado para cadastro do profissional e do paciente, montagem de refeições e alimentos, pré-visualização e exportação dos planos em PDF. Conta com persistência local dos dados, validação de formulários e interface adaptável a diferentes dispositivos.",
-      role: pending("seu papel"),
-      status: pending("completo ou em andamento"),
+      role: "Desenvolvedor Full Stack - Projeto pessoal",
+      status: "Completo",
       images: [{ label: "Etapa de perfil profissional do fluxo guiado", src: nutriplanShot }],
     },
     {
@@ -242,35 +243,27 @@ const pt: Content = {
       category: "Aplicativo mobile",
       description:
         "Aplicativo mobile em Flutter para localização e reserva remota de vagas de estacionamento. Integrado ao OpenStreetMap, permite visualizar estacionamentos disponíveis no mapa, consultar opções de vagas, realizar reservas e efetuar o pagamento diretamente pela plataforma.",
-      role: pending("seu papel"),
-      status: pending("completo ou em andamento"),
-      demoUrl: pending("link de demonstração"),
-      sourceUrl: pending("link do código-fonte"),
-      images: [{ label: "Screenshot do mapa de estacionamentos" }],
-    },
-    {
-      ...nutriplus,
-      category: "Plataforma web e mobile · TCC",
-      description:
-        "Plataforma de acompanhamento nutricional desenvolvida como TCC, composta por uma aplicação web para nutricionistas e um aplicativo mobile para pacientes, integrados à mesma API REST. Permite gerenciar pacientes, criar e acompanhar dietas, disponibilizar cardápios e orientações, consultar documentos e registrar refeições.",
-      role: pending("seu papel"),
-      status: pending("completo ou em andamento"),
-      demoUrl: pending("link de demonstração"),
-      sourceUrl: pending("link do código-fonte"),
-      images: [{ label: "Screenshot da aplicação web" }, { label: "Aplicativo do paciente" }],
+      role: "Desenvolvedor Mobile - Projeto acadêmico",
+      status: "Completo",
+      sourceUrl: "https://github.com/Vaga-Livre/vaga-livre-app",
+      images: [
+        { label: "Tela de login", src: vagaLivreShots[0] },
+        { label: "Mapa de estacionamentos", src: vagaLivreShots[1] },
+        { label: "Detalhes do estacionamento", src: vagaLivreShots[2] },
+      ],
     },
   ],
   about: {
     statement:
-      "Atuo como desenvolvedor Full Stack, do frontend ao backend, com interesse em arquitetura e engenharia de software.",
+      "Da arquitetura à implementação, sempre buscando construir algo melhor.",
     paragraphs: [
-      "Sou desenvolvedor de software com mais de 3 anos de experiência em desenvolvimento Full Stack, atuando desde a construção de interfaces até a implementação de APIs, integrações e regras de negócio. Tenho foco principal no ecossistema Java e Spring Boot no backend, além de experiência com React, Next.js e Angular no frontend.",
-      "Ao longo da minha trajetória, participei do desenvolvimento e da evolução de sistemas, trabalhando com integrações entre serviços, processamento assíncrono e mensageria, além de contribuir para a qualidade e organização das aplicações. Também incorporo ferramentas de Inteligência Artificial ao meu fluxo de desenvolvimento, utilizando-as como apoio à análise, implementação, revisão e aprimoramento de soluções.",
-      "Sou pós-graduado em Cloud Computing e tenho interesse crescente em arquitetura de software, engenharia de sistemas e desenvolvimento de soluções escaláveis, buscando aliar boas práticas de engenharia, tecnologias modernas e decisões técnicas alinhadas às necessidades do negócio.",
+      "Sou desenvolvedor de software há mais de 3 anos, trabalhando tanto no backend quanto no frontend. Tenho uma afinidade maior com o ecossistema Java e Spring Boot, mas também gosto de explorar o desenvolvimento de interfaces com React, Next.js e Angular.",
+      "Nesse período, tive a oportunidade de trabalhar em diferentes projetos, desde sistemas internos até plataformas utilizadas por milhares de pessoas. No dia a dia, lido com APIs, integrações entre serviços, mensageria e regras de negócio, buscando entender não apenas como implementar uma funcionalidade, mas também as decisões envolvidas na construção de um sistema.",
+      "Também incorporei ferramentas de inteligência artificial de forma estruturada ao meu processo de desenvolvimento. Utilizo fluxos de trabalho que envolvem especificação de requisitos, planejamento técnico, implementação e revisão de código, combinando diferentes ferramentas e agentes conforme a necessidade de cada etapa. Mais do que acelerar tarefas, busco utilizá-las para melhorar a qualidade das soluções e tornar o processo de desenvolvimento mais consistente."
     ],
     education: [
-      { label: "Graduação", value: "Análise e Desenvolvimento de Sistemas" },
-      { label: "Pós-graduação", value: "Cloud Computing" },
+      { label: "Graduação", value: "Análise e Desenvolvimento de Sistemas, Instituto Federal do Piauí" },
+      { label: "Pós-graduação", value: "Cloud Computing, UNINTER" },
     ],
   },
   techGroups: [
@@ -300,8 +293,9 @@ const en: Content = {
   htmlLang: "en",
   site: {
     ...pt.site,
+    resumeUrl: resumeUrlEn,
     role: "Full Stack Developer",
-    location: "Brazil",
+    location: "Teresina, Piauí. Brazil",
     description:
       "Full Stack Developer with over 3 years of experience in Java, Spring Boot, React, Next.js and Angular, from building interfaces to implementing APIs, integrations and business rules.",
   },
@@ -335,7 +329,7 @@ const en: Content = {
     technologiesTitle: "Technologies",
   },
   hero: {
-    headline: "Turning ideas into digital solutions",
+    headline: "Development is much more than implementation",
     intro:
       "Full Stack Developer with over 3 years of experience, from building interfaces to implementing APIs, integrations and business rules, with Java, Spring Boot, React, Next.js and Angular.",
     specialties: [
@@ -400,8 +394,8 @@ const en: Content = {
       category: "Website and admin panel",
       description:
         "Digital platform for an artisanal bakery, made up of a responsive website with a digital menu and an admin panel. Customers browse products and order directly through WhatsApp, while the bakery manages products, categories and site information on its own.",
-      role: pending("your role"),
-      status: pending("completed or in progress"),
+      role: "Full Stack Developer - Personal project",
+      status: "Completed",
       images: [{ label: "Website home page", src: doceriaShot }],
     },
     {
@@ -409,8 +403,8 @@ const en: Content = {
       category: "Web application",
       description:
         "Application for nutritionists that makes it easier to create and organize meal plans, with a guided flow for registering the professional and the patient, building meals and foods, and previewing and exporting plans as PDF. It includes local data persistence, form validation and an interface that adapts to different devices.",
-      role: pending("your role"),
-      status: pending("completed or in progress"),
+      role: "Full Stack Developer - Personal project",
+      status: "Completed",
       images: [{ label: "Professional profile step of the guided flow", src: nutriplanShot }],
     },
     {
@@ -418,35 +412,27 @@ const en: Content = {
       category: "Mobile app",
       description:
         "Flutter mobile app for finding and remotely booking parking spots. Integrated with OpenStreetMap, it shows available parking lots on a map, lists spot options, and lets users book and pay directly in the app.",
-      role: pending("your role"),
-      status: pending("completed or in progress"),
-      demoUrl: pending("demo link"),
-      sourceUrl: pending("source code link"),
-      images: [{ label: "Screenshot of the parking lot map" }],
-    },
-    {
-      ...nutriplus,
-      category: "Web and mobile platform · Final thesis",
-      description:
-        "Nutrition follow-up platform developed as my undergraduate final project, made up of a web application for nutritionists and a mobile app for patients, both integrated with the same REST API. It lets nutritionists manage patients, create and track diets, share menus and guidance, view documents and log meals.",
-      role: pending("your role"),
-      status: pending("completed or in progress"),
-      demoUrl: pending("demo link"),
-      sourceUrl: pending("source code link"),
-      images: [{ label: "Screenshot of the web application" }, { label: "Patient app" }],
+      role: "Mobile Developer - Academic project",
+      status: "Completed",
+      sourceUrl: "https://github.com/Vaga-Livre/vaga-livre-app",
+      images: [
+        { label: "Login screen", src: vagaLivreShots[0] },
+        { label: "Parking lot map", src: vagaLivreShots[1] },
+        { label: "Parking lot details", src: vagaLivreShots[2] },
+      ],
     },
   ],
   about: {
     statement:
-      "I work as a Full Stack developer, from frontend to backend, with an interest in software architecture and engineering.",
+      "From architecture to implementation, always aiming to build something better.",
     paragraphs: [
-      "I am a software developer with over 3 years of experience in Full Stack development, working from building interfaces to implementing APIs, integrations and business rules. My main focus is the Java and Spring Boot ecosystem on the backend, along with experience in React, Next.js and Angular on the frontend.",
-      "Throughout my career, I have taken part in building and evolving systems, working with service integrations, asynchronous processing and messaging, while contributing to the quality and organization of applications. I also bring Artificial Intelligence tools into my development workflow, using them to support analysis, implementation, review and refinement of solutions.",
-      "I hold a postgraduate degree in Cloud Computing and have a growing interest in software architecture, systems engineering and scalable solutions, aiming to combine sound engineering practices, modern technologies and technical decisions aligned with business needs.",
+      "I have been a software developer for over 3 years, working on both backend and frontend. I have a stronger affinity with the Java and Spring Boot ecosystem, but I also enjoy exploring interface development with React, Next.js and Angular.",
+      "During this time, I have worked on a variety of projects, from internal systems to platforms used by thousands of people. Day to day, I deal with APIs, service integrations, messaging and business rules, aiming to understand not only how to implement a feature, but also the decisions involved in building a system.",
+      "I have also incorporated artificial intelligence tools into my development process in a structured way. I use workflows that cover requirements specification, technical planning, implementation and code review, combining different tools and agents according to the needs of each stage. More than speeding up tasks, I use them to improve the quality of solutions and make the development process more consistent.",
     ],
     education: [
-      { label: "Bachelor's degree", value: "Systems Analysis and Development" },
-      { label: "Postgraduate degree", value: "Cloud Computing" },
+      { label: "Bachelor's degree", value: "Systems Analysis and Development, Federal Institute of Piauí" },
+      { label: "Postgraduate degree", value: "Cloud Computing, UNINTER" },
     ],
   },
   techGroups: [

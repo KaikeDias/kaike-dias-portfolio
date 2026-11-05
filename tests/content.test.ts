@@ -6,7 +6,8 @@ const { pt, en } = content;
 describe("conteúdo por idioma", () => {
   it("CA09: nomes, empresas, tecnologias de projetos e URLs são iguais nos dois idiomas", () => {
     expect(en.site.name).toBe(pt.site.name);
-    expect(en.site.resumeUrl).toBe(pt.site.resumeUrl);
+    expect(en.site.resumeUrl).toBe("/kaike-dias-miranda-resume.pdf");
+    expect(pt.site.resumeUrl).toBe("/curriculo_kaike_dias_miranda.pdf");
     expect(en.experiences.map((e) => e.company)).toEqual(pt.experiences.map((e) => e.company));
     expect(en.projects.map((p) => [p.name, p.technologies, p.images.map((i) => i?.src)])).toEqual(
       pt.projects.map((p) => [p.name, p.technologies, p.images.map((i) => i?.src)]),
