@@ -42,13 +42,19 @@ export default function LanguageSwitcher() {
       >
         <Languages aria-hidden size={18} strokeWidth={1.75} />
         {locale}
-        <ChevronDown aria-hidden size={16} strokeWidth={1.75} />
+        <ChevronDown
+          aria-hidden
+          size={16}
+          strokeWidth={1.75}
+          className={`transition-transform duration-200 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       <ul
         id="idiomas"
-        hidden={!open}
-        className="absolute right-0 top-full mt-2 min-w-40 rounded-[3px] border border-line bg-canvas py-1 text-[15px] font-medium shadow-sm"
+        className={`absolute right-0 top-full mt-2 min-w-40 origin-top-right rounded-[3px] border border-line bg-canvas py-1 text-[15px] font-medium shadow-sm transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
+          open ? "visible translate-y-0 scale-100 opacity-100" : "invisible -translate-y-1 scale-95 opacity-0"
+        }`}
       >
         {locales.map(({ code, label }) => (
           <li key={code}>
