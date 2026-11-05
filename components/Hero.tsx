@@ -35,15 +35,15 @@ export default function Hero() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
             <a
               href="#projetos"
-              className="inline-flex min-h-12 items-center justify-center rounded-[3px] bg-ink px-5 text-[15px] font-semibold text-canvas transition-colors duration-200 hover:bg-olive-strong"
+              className="group inline-flex min-h-12 items-center justify-center rounded-[3px] bg-ink px-5 text-[15px] font-semibold text-canvas transition-colors duration-200 hover:bg-olive-strong"
             >
-              {t.ui.exploreProjects}
+              <span className="link-underline">{t.ui.exploreProjects}</span>
             </a>
             <ExternalLink
               href={site.resumeUrl}
-              className="inline-flex min-h-11 items-center justify-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
+              className="group inline-flex min-h-11 items-center justify-center text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
             >
-              <span className="border-b border-current">{t.ui.viewResume}</span>
+              <span className="link-underline">{t.ui.viewResume}</span>
             </ExternalLink>
           </div>
         </div>

@@ -51,8 +51,8 @@ export default function Header() {
               <ul className="flex items-center gap-9 text-[15px] font-medium">
                 {t.navLinks.map((link) => (
                   <li key={link.href}>
-                    <a href={link.href} className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-olive-strong">
-                      {link.label}
+                    <a href={link.href} className="group inline-flex min-h-11 items-center transition-colors duration-200 hover:text-olive-strong">
+                      <span className="link-underline">{link.label}</span>
                     </a>
                   </li>
                 ))}
@@ -60,10 +60,10 @@ export default function Header() {
               <a
                 href={t.site.resumeUrl}
                 download
-                className="inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
+                className="group inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold transition-colors duration-200 hover:text-olive-strong"
               >
                 <Download aria-hidden size={18} strokeWidth={1.75} />
-                <span className="border-b border-current">{t.ui.downloadResume}</span>
+                <span className="link-underline">{t.ui.downloadResume}</span>
               </a>
             </nav>
 
